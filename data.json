@@ -5,14 +5,17 @@
 		"items": [
 			{
 				"tijd": "18:00",
+				"eindtijd": "23:00",
 				"titel": "Opening inschrijving",
 				"locatie": "Hotel HIEX"
 			}, {
 				"tijd": "20:00",
+				"eindtijd": "21:00",
 				"titel": "Meeting Kandidaten",
 				"locatie": "Caf&eacute; NJoy"
 			}, {
 				"tijd": "21:00",
+				"eindtijd": "22:45",
 				"titel": "Voetbal Nederland-Spanje",
 				"locatie": "Caf&eacute; NJoy"
 			}
@@ -22,14 +25,17 @@
 		"items": [
 			{
 				"tijd": "18:00",
+				"eindtijd": "23:45",
 				"titel": "Opening inschrijving",
 				"locatie": "Hotel HIEX"
 			}, {
 				"tijd": "20:00",
+				"eindtijd": "02:00",
 				"titel": "Meeting Kandidaten",
 				"locatie": "Caf&eacute; NJoy"
 			}, {
 				"tijd": "21:00",
+				"eindtijd": "20:00",
 				"titel": "Voetbal Nederland-Spanje",
 				"locatie": "Caf&eacute; NJoy"
 			}
