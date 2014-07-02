@@ -67,6 +67,28 @@ function loadAgendaPagina() {
 	});
 }
 
+function loadMotiesPagina() {
+	'use strict';
+	activateMenuItem('motiesmenuitem');
+	var voorstellen = JSON.parse(localStorage.getItem("voorstellen"));
+	if (voorstellen === null) {
+		loadDb(loadMotiesPagina, function(){alert('Kan database niet laden. Probeer later opnieuw.');});
+	}
+	document.getElementById('main').innerHTML = '';
+	for (var key in voorstellen) {
+		console.debug(key);
+		if (voorstellen.hasOwnProperty(key)) {
+			var panel = document.createElement('div');
+			panel.setAttribute('class', 'panel panel-default');
+			var header = document.createElement('div');
+			header.setAttribute('class', 'panel-heading');
+			header.appendChild(document.createTextNode(key));
+			panel.appendChild(header);
+			document.getElementById('main').appendChild(panel);
+		}
+	}
+}
+
 var map;
 function loadLocatiesPagina() {
     'use strict';
