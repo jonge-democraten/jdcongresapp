@@ -1,0 +1,64 @@
+{
+	"homepagina": "<h1>Demo congres!</h1><p>Dit is een demo crongres</p>",
+	"agenda": [{
+		"datum": "Vrijdag 19 juni",
+		"items": [
+			{
+				"tijd": "18:00",
+				"titel": "Opening inschrijving",
+				"locatie": "Hotel HIEX"
+			}, {
+				"tijd": "20:00",
+				"titel": "Meeting Kandidaten",
+				"locatie": "Caf&eacute; NJoy"
+			}, {
+				"tijd": "21:00",
+				"titel": "Voetbal Nederland-Spanje",
+				"locatie": "Caf&eacute; NJoy"
+			}
+		]
+	},{
+		"datum": "Zaterdag 20 juni",
+		"items": [
+			{
+				"tijd": "18:00",
+				"titel": "Opening inschrijving",
+				"locatie": "Hotel HIEX"
+			}, {
+				"tijd": "20:00",
+				"titel": "Meeting Kandidaten",
+				"locatie": "Caf&eacute; NJoy"
+			}, {
+				"tijd": "21:00",
+				"titel": "Voetbal Nederland-Spanje",
+				"locatie": "Caf&eacute; NJoy"
+			}
+		]
+	}],
+    "voorstellen": {
+        "PM": [{
+            "id": "PM01",
+            "indieners": ["Iedereen van elke afdeling dan ook"],
+            "titel": "ICT-team is awesome",
+            "woordvoerder": "Ayla Schneiders",
+            "toelichting": "Dit zo chill is",
+            "inhoud": [
+                ["Constaterende dat", "Digitale wegen het nieuwe asfalt van ons leven is"],
+                ["Overwegende dat", "Je alle onzin ooit hierin kan typen op de meest makkelijke manier"],
+                ["Spreekt uit dat", "Politiek tering belangrijk is en hoe makkelijker het wordt gemaakt het te doen, des te meer politiek er wordt bedreven. Met de groetjes van de slogan van de belastingdienst"]
+            ]
+        }, {
+            "id": "PM02",
+            "indieners": ["Daphnie Ploegstra", "Jeanne Plettenburg", "Pauline Gerth van Wijk", "Marietta Buitenhuis", "Floris Jan Donders", "Steve Bertens"],
+            "titel": "Geen dadelijke tenuitvoerlegging straffen",
+            "woordvoerder": "Daphnie Ploegstra",
+            "toelichting": "Dadelijke tenuitvoerlegging van straffen is een oplossing voor een probleem dat niet bestaat. Er is geen reden om een verdachte meteen op te sluiten na veroordeling in eerste aanleg. Bovendien zal deze maatregel leiden tot een groot aantal schadeclaims van mensen die onterecht vast hebben gezeten. Een schadevergoeding staat echter in geen verhouding tot een onterechte detentie. Elke onterecht gedetineerde is er een te veel.",
+            "inhoud": [
+                ["Constaterende dat", "er op dit moment plannen zijn om verdachten hun straf direct te laten ondergaan na veroordeling in eerste aanleg bij de rechtbank"],
+                ["Overwegende dat", "* verdachten onschuldig zijn totdat schuld bewezen is krachtens artikel 6 EVRM;\r\n* verdachten na veroordeling in eerste aanleg de mogelijkheid hebben om in hoger beroep te gaan tegen de uitspraak;\r\n* dit hoger beroep in vrijheid dient te worden afgewacht omdat schuld niet definitief bewezen is;\r\n* de vrijheid van mensen die in hoger beroep alsnog worden vrijgesproken ernstig wordt benomen door ze gevangen te nemen"],
+                ["Spreekt uit dat", "de Jonge Democraten vinden dat veroordeelden in eerste aanleg hun hoger beroep in vrijheid mogen afwachten"]
+            ]
+        }],
+        "AM": []
+    }
+}
