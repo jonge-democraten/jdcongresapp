@@ -67,6 +67,14 @@ function loadAgendaPagina() {
 	});
 }
 
+function compareVoorstellen(voorstelA, voorstelB) {
+	if (voorstelA['id'] < voorstelB['id'])
+		return -1;
+	if (voorstelA['id'] > voorstelB['id'])
+		return 1;
+	return 0;
+}
+
 function loadMotiesPagina() {
 	'use strict';
 	activateMenuItem('motiesmenuitem');
@@ -76,7 +84,6 @@ function loadMotiesPagina() {
 	}
 	document.getElementById('main').innerHTML = '';
 	for (var key in voorstellen) {
-		console.debug(key);
 		if (voorstellen.hasOwnProperty(key)) {
 			var panel = document.createElement('div');
 			panel.setAttribute('class', 'panel panel-default');
@@ -84,6 +91,17 @@ function loadMotiesPagina() {
 			header.setAttribute('class', 'panel-heading');
 			header.appendChild(document.createTextNode(key));
 			panel.appendChild(header);
+			
+			var group = document.createElement('ul');
+			group.setAttribute('class', 'list-group');
+			voorstellen[key].sort(compareVoorstellen)
+			voorstellen[key].forEach(function(voorstel) {
+				var li = document.createElement('li');
+				li.setAttribute('class', 'list-group-item');
+				li.innerHTML = voorstel['id'] + " " + voorstel['titel'];
+				group.appendChild(li);
+			});
+			panel.appendChild(group);
 			document.getElementById('main').appendChild(panel);
 		}
 	}
