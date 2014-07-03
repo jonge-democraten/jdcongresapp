@@ -184,8 +184,16 @@ function loadMotiesPagina() {
 				// We plakken alles in elkaar
 				voorstelbody.appendChild(toelichtingterm);
 				voorstelbody.appendChild(toelichting);
+				var voorstelfooter = document.createElement('div');
+				voorstelfooter.setAttribute('class', 'modal-footer');
+				var footerclosebutton = document.createElement('button');
+				footerclosebutton.setAttribute('class', 'btn btn-default');
+				footerclosebutton.setAttribute('data-dismiss', 'modal');
+				footerclosebutton.appendChild(document.createTextNode('Sluit'));
+				voorstelfooter.appendChild(footerclosebutton);
 				voorstelcontent.appendChild(voorstelheader);
 				voorstelcontent.appendChild(voorstelbody);
+				voorstelcontent.appendChild(voorstelfooter);
 				voorsteldialog.appendChild(voorstelcontent);
 				voorsteltekst.appendChild(voorsteldialog);
 				voorstelteksten.appendChild(voorsteltekst);
