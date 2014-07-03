@@ -150,7 +150,7 @@ function loadMotiesPagina() {
 				var indienersterm = document.createElement('dt');
 				indienersterm.appendChild(document.createTextNode("Indieners"));
 				var indieners = document.createElement('dd');
-				indieners.appendChild(document.createTextNode(voorstel['indieners']));
+				indieners.appendChild(document.createTextNode(voorstel['indieners'].join(', ')));
 				voorstelbody.appendChild(woordvoerderterm);
 				voorstelbody.appendChild(woordvoerder);
 				voorstelbody.appendChild(indienersterm);
