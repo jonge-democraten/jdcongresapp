@@ -112,12 +112,9 @@ function loadMotiesPagina() {
 			panel.setAttribute('class', 'panel panel-default');
 			var header = document.createElement('div');
 			header.setAttribute('class', 'panel-heading');
-			var headerlink = document.createElement('a');
-			headerlink.setAttribute('data-toggle', 'collapse');
-			headerlink.setAttribute('data-parent', '#main');
-			headerlink.setAttribute('href', '#collapse'+i.toString());
-			headerlink.appendChild(document.createTextNode(key));
-			header.appendChild(headerlink);
+            header.setAttribute('data-parent', '#main');
+            header.setAttribute('onclick', "$('#collapse"+i.toString()+"').collapse('toggle')")
+			header.appendChild(document.createTextNode(key));
 			panel.appendChild(header);
 			
 			// De voorsteltitels worden in het panel opgenomen, standaard ingeklapt
