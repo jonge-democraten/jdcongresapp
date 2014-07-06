@@ -158,7 +158,6 @@ function loadMotiesPagina() {
 				// De acties staan in een array
 				for (var actie in voorstel['inhoud']) {
 					var actietype = document.createElement('dt');
-					console.debug(actie);
 					actietype.appendChild(document.createTextNode(voorstel['inhoud'][actie][0]));
 					var actietekst = document.createElement('dd');
 					// Elke actie kan bullets bevatten, afhankelijk daarvan is het een array of niet
@@ -206,34 +205,142 @@ function loadMotiesPagina() {
 	document.getElementById('main').appendChild(voorstelteksten);
 }
 
+function transformExtent(coordinates) {
+    var onecorner = ol.proj.transform([coordinates[0], coordinates[1]], "EPSG:4326", "EPSG:900913");
+    var othercorner = ol.proj.transform([coordinates[2], coordinates[3]], "EPSG:4326", "EPSG:900913");
+    return [
+        onecorner[0],
+        onecorner[1],
+        othercorner[0],
+        othercorner[1],
+    ];
+}
+
+function locatiesToExtent(locaties) {
+    var lonmin = locaties[0]['long'];
+    var lonmax = lonmin;
+    var latmin = locaties[0]['lat'];
+    var latmax = latmin;
+    for (var i in locaties) {
+        if (locaties[i]['long'] > lonmax) {
+            lonmax = locaties[i]['long'];
+        }
+        else if (locaties[i]['long'] < lonmin) {
+            lonmin = locaties[i]['long'];
+        }
+        if (locaties[i]['lat'] > latmax) {
+            latmax = locaties[i]['lat'];
+        }
+        else if (locaties[i]['lat'] < latmin) {
+            latmin = locaties[i]['lat'];
+        }
+    }
+    
+    var new_extent = transformExtent(
+        [
+            lonmin,
+            latmin,
+            lonmax,
+            latmax,
+        ]
+    );
+    
+    return new_extent;
+}
+
 var map;
+var popup;
 function loadLocatiesPagina() {
     'use strict';
     activateMenuItem('locatiesmenuitem');
-    var mapdiv = document.createElement('div');
+    var locaties = JSON.parse(localStorage.getItem("locaties"));
+	if (locaties === null) {
+		loadDb(loadLocatiesPagina, function(){alert('Kan database niet laden. Probeer later opnieuw.');});
+	}
+	var mapdiv = document.createElement('div');
     mapdiv.setAttribute('id', 'map');
     document.getElementById('main').innerHTML = '';
     document.getElementById('main').appendChild(mapdiv);
-    map = new OpenLayers.Map({
-        div: "map",
-        //theme: null,
-        projection: new OpenLayers.Projection("EPSG:900913"),
-        numZoomLevels: 18,
-        controls: [
-            new OpenLayers.Control.TouchNavigation({
-                dragPanOptions: {
-                    enableKinetic: true
-                }
-            }),
-            new OpenLayers.Control.Zoom()
-        ],
-        layers: [
-            new OpenLayers.Layer.OSM("OpenStreetMap", null, {
-                transitionEffect: 'resize'
-            })
-        ]
+    var popupdiv = document.createElement('div');
+    popupdiv.setAttribute('id', 'popup');
+    document.getElementById('main').appendChild(popupdiv);
+    
+    var iconStyle = new ol.style.Style({
+        image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
+            anchor: [0.5, 32],
+            anchorXUnits: 'fraction',
+            anchorYUnits: 'pixels',
+            src: 'data/icon.png'
+        }))
     });
-    map.setCenter(new OpenLayers.LonLat(0, 0), 3);
+    
+    var features = [];
+
+    for (var locatieIndex in locaties) {
+        if (locaties[locatieIndex]['naam'] == "midden") {
+            center = ol.proj.transform([locaties[locatieIndex]['long'], locaties[locatieIndex]['lat']], "EPSG:4326", "EPSG:900913");
+        }
+        else {
+            var iconFeature = new ol.Feature({
+                geometry: new ol.geom.Point(ol.proj.transform([locaties[locatieIndex]['long'], locaties[locatieIndex]['lat']], "EPSG:4326", "EPSG:900913")),
+                name: locaties[locatieIndex]['naam'],
+            });
+            iconFeature.setStyle(iconStyle);
+            features.push(iconFeature);
+        }
+    }
+
+    var vectorSource = new ol.source.Vector({
+        features: features
+    })
+        
+    var vectorLayer = new ol.layer.Vector({
+        source: vectorSource
+    });
+    
+    var extent = locatiesToExtent(locaties);
+    
+    map = new ol.Map({
+        target: "map",
+        view: new ol.View({
+            extent: extent,
+        }),
+        layers: [
+            new ol.layer.Tile({
+                source: new ol.source.OSM()
+            }),
+            vectorLayer            
+        ],
+    });
+    map.getView().fitExtent(extent, map.getSize());
+    
+    popup = new ol.Overlay(
+        { element: document.getElementById('popup') }
+    );
+    map.addOverlay(popup);
+    
+    var element = document.getElementById('popup');
+    
+    map.on('click', function(evt) {
+        var feature = map.forEachFeatureAtPixel(evt.pixel,
+            function(feature, layer) {
+                return feature;
+            });
+        if (feature) {
+            var geometry = feature.getGeometry();
+            var coord = geometry.getCoordinates();
+            popup.setPosition(coord);
+            $(element).popover({
+                'placement': 'top',
+                'html': true,
+                'content': feature.get('name')
+            });
+            $(element).popover('show');
+        } else {
+            $(element).popover('destroy');
+        }
+    });
+    
 }
 
 function loadTwitterPagina() {
