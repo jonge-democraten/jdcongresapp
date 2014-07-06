@@ -1,5 +1,16 @@
 {
-	"homepagina": "<h1>Demo congres!</h1><p>Dit is een demo crongres</p>",
+	"nieuwsitems": [
+    {
+        "tekst": "Waarom congresseren als je een hashtag hebt? Vermeld bij je discussies op de twitters, serieuze en minder serieuze, de hashtag #JDcongres zodat de rest van ons ook mee kan genieten.",
+        "id": 1,
+        "titel": "Virtuele wandelgangen"
+    },
+    {
+        "tekst": "Heel veel plezier op ALV 68 Utrecht!",
+        "id": 2,
+        "titel": "JD Congres Utrehct"
+    }
+    ],
 	"agenda": [{
 		"datum": "Vrijdag 19 juni",
 		"items": [

@@ -31,11 +31,27 @@ function activateMenuItem(item) {
 function loadHomePagina() {
 	'use strict';
     activateMenuItem('homemenuitem');
-	var content = JSON.parse(localStorage.getItem('homepagina'));
+	var content = JSON.parse(localStorage.getItem('nieuwsitems'));
 	if (content === null) {
 		loadDb(loadHomePagina, function(){alert('Kan database niet laden. Probeer later opnieuw.');});
 	}
-	document.getElementById('main').innerHTML = content;
+	document.getElementById('main').innerHTML = '';
+    content.forEach(function(nieuwsitem){
+        var panel = document.createElement('div');
+        panel.setAttribute('class', 'panel panel-default');
+        
+        var header = document.createElement('div');
+        header.setAttribute('class', 'panel-heading');
+        header.appendChild(document.createTextNode(nieuwsitem['titel']));
+        panel.appendChild(header);
+        
+        var body = document.createElement('div');
+        body.setAttribute('class', 'panel-body');
+        body.appendChild(document.createTextNode(nieuwsitem['tekst']));
+        panel.appendChild(body);
+        
+        document.getElementById('main').appendChild(panel);
+    });
 }
 
 function loadAgendaPagina() {
