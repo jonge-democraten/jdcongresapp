@@ -29,13 +29,13 @@ function activateMenuItem(item) {
 
 
 function loadHomePagina() {
-	'use strict';
+    'use strict';
     activateMenuItem('homemenuitem');
-	var content = JSON.parse(localStorage.getItem('nieuwsitems'));
-	if (content === null) {
-		loadDb(loadHomePagina, function(){alert('Kan database niet laden. Probeer later opnieuw.');});
+    var content = JSON.parse(localStorage.getItem('nieuwsitems'));
+    if (content === null) {
+        loadDb(loadHomePagina, function(){alert('Kan database niet laden. Probeer later opnieuw.');});
 	}
-	document.getElementById('main').innerHTML = '';
+    document.getElementById('main').innerHTML = '';
     content.forEach(function(nieuwsitem){
         var panel = document.createElement('div');
         panel.setAttribute('class', 'panel panel-default');
@@ -54,6 +54,13 @@ function loadHomePagina() {
     });
 }
 
+function pad(number) {
+    if (number >= 0 && number < 10) {
+        return "0"+number.toString();
+    }
+    else return number.toString();
+}
+
 function loadAgendaPagina() {
 	'use strict';
     activateMenuItem('agendamenuitem');
@@ -61,21 +68,31 @@ function loadAgendaPagina() {
 	if (agenda === null) {
 		loadDb(loadAgendaPagina, function(){alert('Kan database niet laden. Probeer later opnieuw.');});
 	}
-	document.getElementById('main').innerHTML = '';
+    document.getElementById('main').innerHTML = '';
 	agenda.forEach(function(day) {
 		var panel = document.createElement('div');
         panel.setAttribute('class', 'panel panel-default');
         var header = document.createElement('div');
         header.setAttribute('class', 'panel-heading');
-        header.appendChild(document.createTextNode(day['datum']));
+        var date = new Date(day['datum']);
+        header.appendChild(document.createTextNode(date.toLocaleDateString()));
         panel.appendChild(header);
 
         var group = document.createElement('ul');
         group.setAttribute('class', 'list-group');
 		day["items"].forEach(function(item) {
+            var now = new Date();
+            var begintijd = new Date(item['tijd']);
+            var eindtijd = new Date(item['eindtijd']);
+            if (now > begintijd && now < eindtijd) {
+                var html = "<b>" + pad(begintijd.getHours()) + ":" + pad(begintijd.getMinutes()) + " " + item['titel'] + "</b><br/>Locatie: " + item["locatie"];
+            }
+            else {
+                var html = pad(begintijd.getHours()) + ":" + pad(begintijd.getMinutes()) + " " + item['titel'] + "<br/>Locatie: " + item["locatie"];
+            }
             var li = document.createElement('li');
             li.setAttribute('class', 'list-group-item');
-			li.innerHTML = item["tijd"] + " " + item["titel"] + "<br/>Locatie: " + item["locatie"];
+			li.innerHTML = html;
 			group.appendChild(li);
 		});
 		panel.appendChild(group);
