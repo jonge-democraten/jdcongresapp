@@ -345,6 +345,10 @@ function loadLocatiesPagina() {
         ],
     });
     map.getView().fitExtent(extent, map.getSize());
+    if (locaties.length == 1) {
+        map.getView().setZoom(18);
+    }
+    console.debug(map.getView().getZoom());
     
     popup = new ol.Overlay(
         { element: document.getElementById('popup') }
