@@ -141,8 +141,10 @@ function loadMotiesPagina() {
 			var group = document.createElement('div');
 			group.setAttribute('class', 'list-group');
 			voorstellen[key].sort(compareVoorstellen); // We sorteren de voorstellen op id (want in die volgorde staan ze ook in het congresboek)
+            var hasVoorstellen = false;
 			voorstellen[key].forEach(function(voorstel) { // Elk voorstel voegen we toe aan het panel (alleen id + titel) en de modal-lijst
 				j = j + 1;
+                hasVoorstellen = true;
 				// Toevoegen aan het panel:
 				var link = document.createElement('a');
 				link.setAttribute('href', '#voorstel' + j.toString());
@@ -229,7 +231,7 @@ function loadMotiesPagina() {
 			});
 			collapsible_content.appendChild(group);
 			panel.appendChild(collapsible_content);
-			document.getElementById('main').appendChild(panel);
+			if (hasVoorstellen) document.getElementById('main').appendChild(panel);
 		}
 	}
 	document.getElementById('main').appendChild(voorstelteksten);
