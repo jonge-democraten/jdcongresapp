@@ -108,6 +108,14 @@ function compareVoorstellen(voorstelA, voorstelB) {
 	return 0;
 }
 
+function setVoorkeur(voorstelId, voorkeur) {
+    localStorage.setItem('voorkeur-voorstel-'+voorstelId.toString(), voorkeur);
+    voorstelLink = document.getElementById('voorstellistitem'+voorstelId.toString());
+    if (voorkeur == "voor") voorstelLink.setAttribute('class', "list-group-item list-group-item-success");
+    else if (voorkeur == "tegen") voorstelLink.setAttribute('class', "list-group-item list-group-item-danger");
+    else voorstelLink.setAttribute('class', "list-group-item");
+}
+
 function loadMotiesPagina() {
 	'use strict';
 	activateMenuItem('motiesmenuitem');
@@ -148,8 +156,17 @@ function loadMotiesPagina() {
 				// Toevoegen aan het panel:
 				var link = document.createElement('a');
 				link.setAttribute('href', '#voorstel' + j.toString());
-				link.setAttribute('class', 'list-group-item');
+                link.setAttribute('id', 'voorstellistitem'+ j.toString());
 				link.setAttribute('data-toggle', 'modal');
+                if (localStorage.getItem('voorkeur-voorstel-'+j.toString()) == "voor") {
+                    link.setAttribute('class', 'list-group-item list-group-item-success');
+                }
+                else if (localStorage.getItem('voorkeur-voorstel-'+j.toString()) == "tegen") {
+                    link.setAttribute('class', 'list-group-item list-group-item-danger');
+                }
+                else {
+                    link.setAttribute('class', 'list-group-item');
+                }
 				link.innerHTML = voorstel['id'] + " " + voorstel['titel'];
 				group.appendChild(link);
 				// Toevoegen aan de modal-lijst:
@@ -217,10 +234,22 @@ function loadMotiesPagina() {
 				voorstelbody.appendChild(toelichting);
 				var voorstelfooter = document.createElement('div');
 				voorstelfooter.setAttribute('class', 'modal-footer');
-				var footerclosebutton = document.createElement('button');
+                var footervoorbutton = document.createElement('button');
+                footervoorbutton.setAttribute('class', 'btn btn-success');
+                footervoorbutton.setAttribute('data-dismiss', 'modal');
+                footervoorbutton.setAttribute('onclick', 'setVoorkeur('+j.toString()+', "voor")');
+                footervoorbutton.appendChild(document.createTextNode('Voor'));
+				var footertegenbutton = document.createElement('button');
+                footertegenbutton.setAttribute('class', 'btn btn-danger');
+                footertegenbutton.setAttribute('data-dismiss', 'modal');
+                footertegenbutton.setAttribute('onclick', 'setVoorkeur('+j.toString()+', "tegen")');
+                footertegenbutton.appendChild(document.createTextNode('Tegen'));
+                var footerclosebutton = document.createElement('button');
 				footerclosebutton.setAttribute('class', 'btn btn-default');
 				footerclosebutton.setAttribute('data-dismiss', 'modal');
 				footerclosebutton.appendChild(document.createTextNode('Sluit'));
+                voorstelfooter.appendChild(footervoorbutton);
+                voorstelfooter.appendChild(footertegenbutton);
 				voorstelfooter.appendChild(footerclosebutton);
 				voorstelcontent.appendChild(voorstelheader);
 				voorstelcontent.appendChild(voorstelbody);
