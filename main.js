@@ -238,12 +238,12 @@ function loadMotiesPagina() {
                 footervoorbutton.setAttribute('class', 'btn btn-success');
                 footervoorbutton.setAttribute('data-dismiss', 'modal');
                 footervoorbutton.setAttribute('onclick', 'setVoorkeur('+j.toString()+', "voor")');
-                footervoorbutton.appendChild(document.createTextNode('Voor'));
+                footervoorbutton.innerHTML = '<span class="glyphicon glyphicon-ok"></span>'
 				var footertegenbutton = document.createElement('button');
                 footertegenbutton.setAttribute('class', 'btn btn-danger');
                 footertegenbutton.setAttribute('data-dismiss', 'modal');
                 footertegenbutton.setAttribute('onclick', 'setVoorkeur('+j.toString()+', "tegen")');
-                footertegenbutton.appendChild(document.createTextNode('Tegen'));
+                footertegenbutton.innerHTML = '<span class="glyphicon glyphicon-remove"></span>';
                 var footerclosebutton = document.createElement('button');
 				footerclosebutton.setAttribute('class', 'btn btn-default');
 				footerclosebutton.setAttribute('data-dismiss', 'modal');
