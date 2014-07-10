@@ -110,10 +110,33 @@ function compareVoorstellen(voorstelA, voorstelB) {
 
 function setVoorkeur(voorstelId, voorkeur) {
     localStorage.setItem('voorkeur-voorstel-'+voorstelId.toString(), voorkeur);
-    voorstelLink = document.getElementById('voorstellistitem'+voorstelId.toString());
+    var voorstelLink = document.getElementById('voorstellistitem'+voorstelId.toString());
     if (voorkeur == "voor") voorstelLink.setAttribute('class', "list-group-item list-group-item-success");
     else if (voorkeur == "tegen") voorstelLink.setAttribute('class', "list-group-item list-group-item-danger");
     else voorstelLink.setAttribute('class', "list-group-item");
+}
+
+function saveNote(voorstelId) {
+    var noteTextElement = document.getElementById('voorstel-note-'+voorstelId.toString());
+    var saveButton = document.getElementById('savebutton'+voorstelId.toString());
+    if (noteTextElement.value != "") localStorage.setItem('voorstel-note-'+voorstelId.toString(), noteTextElement.value);
+    else localStorage.removeItem('voorstel-note-'+voorstelId.toString());
+    saveButton.innerHTML = '<span class="glyphicon glyphicon-floppy-saved"></span>';
+    
+}
+
+function openNote(voorstelId, unconditional) {
+    var voorstelNoteText = document.getElementById('voorstel-note-'+voorstelId.toString()).value;
+    var saveButton = document.getElementById('savebutton'+voorstelId.toString());
+    saveButton.innerHTML = '<span class="glyphicon glyphicon-floppy-disk"></span>';
+    if (voorstelNoteText != "" || unconditional) {
+        $('#voorstel'+voorstelId.toString()+' .notetoggle').collapse('show');
+        $('#voorstel'+voorstelId.toString()+' .notetoggleinv').collapse('hide');
+    }
+    else {
+        $('#voorstel'+voorstelId.toString()+' .notetoggle').collapse('hide');
+        $('#voorstel'+voorstelId.toString()+' .notetoggleinv').collapse('show');
+    }
 }
 
 function loadMotiesPagina() {
@@ -153,11 +176,13 @@ function loadMotiesPagina() {
 			voorstellen[key].forEach(function(voorstel) { // Elk voorstel voegen we toe aan het panel (alleen id + titel) en de modal-lijst
 				j = j + 1;
                 hasVoorstellen = true;
-				// Toevoegen aan het panel:
+				
+                // Toevoegen aan het panel:
 				var link = document.createElement('a');
 				link.setAttribute('href', '#voorstel' + j.toString());
                 link.setAttribute('id', 'voorstellistitem'+ j.toString());
 				link.setAttribute('data-toggle', 'modal');
+                link.setAttribute('onclick', 'openNote('+j.toString()+', false)');
                 if (localStorage.getItem('voorkeur-voorstel-'+j.toString()) == "voor") {
                     link.setAttribute('class', 'list-group-item list-group-item-success');
                 }
@@ -169,27 +194,35 @@ function loadMotiesPagina() {
                 }
 				link.innerHTML = voorstel['id'] + " " + voorstel['titel'];
 				group.appendChild(link);
-				// Toevoegen aan de modal-lijst:
+				
+                // Toevoegen aan de modal-lijst:
 				var voorsteltekst = document.createElement('div');
 				voorsteltekst.setAttribute('class', 'modal fade');
 				voorsteltekst.setAttribute('id', 'voorstel' + j.toString());
 				voorsteltekst.setAttribute('tabindex', '-1'); // For Esc key to work
-				var voorsteldialog = document.createElement('div');
+				
+                var voorsteldialog = document.createElement('div');
 				voorsteldialog.setAttribute('class', 'modal-dialog');
-				var voorstelcontent = document.createElement('div');
+				
+                var voorstelcontent = document.createElement('div');
 				voorstelcontent.setAttribute('class', 'modal-content');
-				var voorstelheader = document.createElement('div');
+				
+                var voorstelheader = document.createElement('div');
 				voorstelheader.setAttribute('class', 'modal-header');
-				var closebutton = document.createElement('button');
+				
+                var closebutton = document.createElement('button');
 				closebutton.setAttribute('type', 'button');
 				closebutton.setAttribute('class', 'close');
 				closebutton.setAttribute('data-dismiss', 'modal');
 				closebutton.appendChild(document.createTextNode('\u00d7'));
-				voorstelheader.appendChild(closebutton);
-				voorstelheader.appendChild(document.createTextNode(voorstel['id'] + " " + voorstel['titel']));
-				var voorstelbody = document.createElement('div');
+                
+                voorstelheader.appendChild(closebutton);
+                voorstelheader.appendChild(document.createTextNode(voorstel['id'] + " " + voorstel['titel']));
+				
+                var voorstelbody = document.createElement('div');
 				voorstelbody.setAttribute('class', 'modal-body');
-				// De inhoud staat opgesomd in een dl-opsomming
+				
+                // De inhoud staat opgesomd in een dl-opsomming
 				var voorstelopsomming = document.createElement('dl');
 				voorstelopsomming.setAttribute('class', 'dl-horizontal');
 				var woordvoerderterm = document.createElement('dt');
@@ -229,30 +262,59 @@ function loadMotiesPagina() {
 				toelichtingterm.appendChild(document.createTextNode("Toelichting"));
 				var toelichting = document.createElement('dd');
 				toelichting.appendChild(document.createTextNode(voorstel['toelichting']));
-				// We plakken alles in elkaar
+				
+                // Extra veld voor aantekeningen
+                var voorstelnote = document.createElement('div');
+                voorstelnote.setAttribute('class', 'modal-body notetoggle collapse');
+                var voorstelnotetext = document.createElement('textarea');
+                voorstelnotetext.setAttribute('id', 'voorstel-note-'+ j.toString());
+                voorstelnotetext.setAttribute('class', 'form-control');
+                if (localStorage.getItem('voorstel-note-'+j.toString()) != null) voorstelnotetext.innerHTML = localStorage.getItem('voorstel-note-'+j.toString());
+                voorstelnote.appendChild(voorstelnotetext);
+                
+                // We plakken alles in elkaar
 				voorstelbody.appendChild(toelichtingterm);
 				voorstelbody.appendChild(toelichting);
-				var voorstelfooter = document.createElement('div');
+				
+                var voorstelfooter = document.createElement('div');
 				voorstelfooter.setAttribute('class', 'modal-footer');
+                
+                var footernotebutton = document.createElement('button');
+                footernotebutton.setAttribute('class', 'btn btn-warning pull-left notetoggleinv collapse in');
+                footernotebutton.setAttribute('onclick', 'openNote('+j.toString()+', true)');
+                footernotebutton.innerHTML = '<span class="glyphicon glyphicon-pencil"></span>';
+				
+                var footersavebutton = document.createElement('button');
+                footersavebutton.setAttribute('class', 'btn btn-default pull-left notetoggle collapse');
+                footersavebutton.setAttribute('id', 'savebutton'+j.toString());
+                footersavebutton.setAttribute('onclick', 'saveNote('+j.toString()+')');
+                footersavebutton.innerHTML = '<span class="glyphicon glyphicon-floppy-disk"></span>';
+                
                 var footervoorbutton = document.createElement('button');
                 footervoorbutton.setAttribute('class', 'btn btn-success');
                 footervoorbutton.setAttribute('data-dismiss', 'modal');
                 footervoorbutton.setAttribute('onclick', 'setVoorkeur('+j.toString()+', "voor")');
-                footervoorbutton.innerHTML = '<span class="glyphicon glyphicon-ok"></span>'
-				var footertegenbutton = document.createElement('button');
+                footervoorbutton.innerHTML = '<span class="glyphicon glyphicon-ok"></span>';
+				
+                var footertegenbutton = document.createElement('button');
                 footertegenbutton.setAttribute('class', 'btn btn-danger');
                 footertegenbutton.setAttribute('data-dismiss', 'modal');
                 footertegenbutton.setAttribute('onclick', 'setVoorkeur('+j.toString()+', "tegen")');
                 footertegenbutton.innerHTML = '<span class="glyphicon glyphicon-remove"></span>';
+                
                 var footerclosebutton = document.createElement('button');
 				footerclosebutton.setAttribute('class', 'btn btn-default');
 				footerclosebutton.setAttribute('data-dismiss', 'modal');
 				footerclosebutton.appendChild(document.createTextNode('Sluit'));
+                
+                voorstelfooter.appendChild(footernotebutton);
+                voorstelfooter.appendChild(footersavebutton);
                 voorstelfooter.appendChild(footervoorbutton);
                 voorstelfooter.appendChild(footertegenbutton);
 				voorstelfooter.appendChild(footerclosebutton);
 				voorstelcontent.appendChild(voorstelheader);
 				voorstelcontent.appendChild(voorstelbody);
+                voorstelcontent.appendChild(voorstelnote);
 				voorstelcontent.appendChild(voorstelfooter);
 				voorsteldialog.appendChild(voorstelcontent);
 				voorsteltekst.appendChild(voorsteldialog);
@@ -264,6 +326,8 @@ function loadMotiesPagina() {
 		}
 	}
 	document.getElementById('main').appendChild(voorstelteksten);
+    $('.notetoggle').collapse();
+    $('.notetoggleinv').collapse();
 }
 
 function transformExtent(coordinates) {
