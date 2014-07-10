@@ -119,10 +119,15 @@ function setVoorkeur(voorstelId, voorkeur) {
 function saveNote(voorstelId) {
     var noteTextElement = document.getElementById('voorstel-note-'+voorstelId.toString());
     var saveButton = document.getElementById('savebutton'+voorstelId.toString());
-    if (noteTextElement.value != "") localStorage.setItem('voorstel-note-'+voorstelId.toString(), noteTextElement.value);
-    else localStorage.removeItem('voorstel-note-'+voorstelId.toString());
+    if (noteTextElement.value != "") {
+        localStorage.setItem('voorstel-note-'+voorstelId.toString(), noteTextElement.value);
+        voegPenToe(voorstelId);
+    }
+    else {
+        localStorage.removeItem('voorstel-note-'+voorstelId.toString());
+        verwijderPen(voorstelId);
+    }
     saveButton.innerHTML = '<span class="glyphicon glyphicon-floppy-saved"></span>';
-    
 }
 
 function openNote(voorstelId, unconditional) {
@@ -130,12 +135,41 @@ function openNote(voorstelId, unconditional) {
     var saveButton = document.getElementById('savebutton'+voorstelId.toString());
     saveButton.innerHTML = '<span class="glyphicon glyphicon-floppy-disk"></span>';
     if (voorstelNoteText != "" || unconditional) {
-        $('#voorstel'+voorstelId.toString()+' .notetoggle').collapse('show');
         $('#voorstel'+voorstelId.toString()+' .notetoggleinv').collapse('hide');
+        $('#voorstel'+voorstelId.toString()+' .notetoggle').collapse('show');
     }
     else {
         $('#voorstel'+voorstelId.toString()+' .notetoggle').collapse('hide');
         $('#voorstel'+voorstelId.toString()+' .notetoggleinv').collapse('show');
+    }
+}
+
+function voegPenToe(voorstelId) {
+    var link = document.getElementById("voorstellistitem"+voorstelId.toString());
+    var searchPencil = link.getElementsByTagName('span');
+    if (searchPencil.length == 0) {
+        var pencil = document.createElement('span');
+        pencil.setAttribute('class', 'pull-right glyphicon glyphicon-pencil');
+        link.appendChild(pencil);
+    }
+}
+
+function verwijderPen(voorstelId) {
+    var link = document.getElementById("voorstellistitem"+voorstelId.toString());
+    var searchPencil = link.getElementsByTagName('span');
+    if (searchPencil.length != 0) {
+        link.removeChild(searchPencil[0]);
+    }
+}
+
+function updatePen(voorstelId) {
+    if (localStorage.getItem('voorstel-note-'+voorstelId.toString()) != null) voegPenToe(voorstelId);
+    else verwijderPen(voorstelId);
+}
+
+function setAllPens(maxVoorstelId) {
+    for (i=1; i <= maxVoorstelId; i++) {
+        updatePen(i);
     }
 }
 
@@ -290,17 +324,22 @@ function loadMotiesPagina() {
                 footersavebutton.setAttribute('onclick', 'saveNote('+j.toString()+')');
                 footersavebutton.innerHTML = '<span class="glyphicon glyphicon-floppy-disk"></span>';
                 
-                var footervoorbutton = document.createElement('button');
+                var footerstembuttons = document.createElement('div');
+                footerstembuttons.setAttribute('class', 'btn-group');
+                footerstembuttons.setAttribute('data-toggle', 'buttons');
+                
+                var footervoorbutton = document.createElement('label');
                 footervoorbutton.setAttribute('class', 'btn btn-success');
-                footervoorbutton.setAttribute('data-dismiss', 'modal');
                 footervoorbutton.setAttribute('onclick', 'setVoorkeur('+j.toString()+', "voor")');
-                footervoorbutton.innerHTML = '<span class="glyphicon glyphicon-ok"></span>';
+                footervoorbutton.innerHTML = '<input type="radio" name="options"><span class="glyphicon glyphicon-ok"></span></label>';
 				
-                var footertegenbutton = document.createElement('button');
+                var footertegenbutton = document.createElement('label');
                 footertegenbutton.setAttribute('class', 'btn btn-danger');
-                footertegenbutton.setAttribute('data-dismiss', 'modal');
                 footertegenbutton.setAttribute('onclick', 'setVoorkeur('+j.toString()+', "tegen")');
-                footertegenbutton.innerHTML = '<span class="glyphicon glyphicon-remove"></span>';
+                footertegenbutton.innerHTML = '<input type="radio" name="options"><span class="glyphicon glyphicon-remove"></span></label>';
+                
+                footerstembuttons.appendChild(footervoorbutton);
+                footerstembuttons.appendChild(footertegenbutton);
                 
                 var footerclosebutton = document.createElement('button');
 				footerclosebutton.setAttribute('class', 'btn btn-default');
@@ -309,9 +348,8 @@ function loadMotiesPagina() {
                 
                 voorstelfooter.appendChild(footernotebutton);
                 voorstelfooter.appendChild(footersavebutton);
-                voorstelfooter.appendChild(footervoorbutton);
-                voorstelfooter.appendChild(footertegenbutton);
-				voorstelfooter.appendChild(footerclosebutton);
+                voorstelfooter.appendChild(footerstembuttons);
+                voorstelfooter.appendChild(footerclosebutton);
 				voorstelcontent.appendChild(voorstelheader);
 				voorstelcontent.appendChild(voorstelbody);
                 voorstelcontent.appendChild(voorstelnote);
@@ -319,6 +357,7 @@ function loadMotiesPagina() {
 				voorsteldialog.appendChild(voorstelcontent);
 				voorsteltekst.appendChild(voorsteldialog);
 				voorstelteksten.appendChild(voorsteltekst);
+                
 			});
 			collapsible_content.appendChild(group);
 			panel.appendChild(collapsible_content);
@@ -328,6 +367,7 @@ function loadMotiesPagina() {
 	document.getElementById('main').appendChild(voorstelteksten);
     $('.notetoggle').collapse();
     $('.notetoggleinv').collapse();
+    setAllPens(j);
 }
 
 function transformExtent(coordinates) {
