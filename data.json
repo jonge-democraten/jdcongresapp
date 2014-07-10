@@ -53,7 +53,7 @@
 		]
 	}],
     "voorstellen": {
-        "PM": [{
+        "Politieke moties": [{
             "id": "PM01",
             "indieners": ["Iedereen van elke afdeling dan ook"],
             "titel": "ICT-team is awesome",
@@ -76,7 +76,7 @@
                 ["Spreekt uit dat", "de Jonge Democraten vinden dat veroordeelden in eerste aanleg hun hoger beroep in vrijheid mogen afwachten"]
             ]
         }],
-        "AM": []
+        "Amendementen": []
     },
     "locaties": [
         {
