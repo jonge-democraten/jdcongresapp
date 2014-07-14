@@ -25,6 +25,11 @@ function activateMenuItem(item) {
     } else {
         $('#twittermenuitem')[0].setAttribute('class', '');
     }
+    if (item === 'instellingenmenuitem') {
+        $('#instellingenmenuitem')[0].setAttribute('class', 'active');
+    } else {
+        $('#instellingenmenuitem')[0].setAttribute('class', '');
+    }
 }
 
 
@@ -522,6 +527,44 @@ function loadTwitterPagina() {
 	var script = document.createElement('script');
 	script.setAttribute('src','https://platform.twitter.com/widgets.js');
 	document.getElementById('main').appendChild(script);
+}
+
+function resetLocalStorage() {
+    localStorage.clear();
+    location.reload(true);
+}
+
+function loadInstellingenPagina() {
+    'use strict';
+    activateMenuItem('instellingenmenuitem');
+    document.getElementById('main').innerHTML = '';
+    
+    var resetPanel = document.createElement('div');
+    resetPanel.setAttribute('class', 'panel panel-default');
+    
+    var resetHeader = document.createElement('div');
+    resetHeader.setAttribute('class', 'panel-heading');
+    resetHeader.appendChild(document.createTextNode("Verwijder lokale informatie"));
+    
+    resetPanel.appendChild(resetHeader);
+    
+    var resetBody = document.createElement('div');
+    resetBody.setAttribute('class', 'panel-body');
+    
+    var resetBodyText = document.createElement('div');
+    resetBodyText.setAttribute('class', 'pull-left');
+    resetBodyText.appendChild(document.createTextNode("Verwijder alle informatie en herlaad deze vanaf de server. Dit verwijdert ook alle aantekeningen en voorkeuren. Dit is nodig om de app voor een nieuw congres klaar te maken."));
+    resetBody.appendChild(resetBodyText);
+
+    var resetButton = document.createElement('button');
+    resetButton.setAttribute('class', 'btn btn-primary pull-right');
+    resetButton.setAttribute('onclick', 'resetLocalStorage()');
+    resetButton.innerHTML = "Reset";
+    resetBody.appendChild(resetButton);
+    
+    resetPanel.appendChild(resetBody);
+    
+    document.getElementById('main').appendChild(resetPanel);
 }
 
 function loadDb(onload, onerr) {
