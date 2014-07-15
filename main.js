@@ -129,7 +129,6 @@ function setVoorkeur(voorstelId, voorkeur) {
 function saveNote(voorstelId) {
     'use strict';
     var noteTextElement = document.getElementById('voorstel-note-'+voorstelId.toString());
-    var saveButton = document.getElementById('savebutton'+voorstelId.toString());
     if (noteTextElement.value != "") {
         localStorage.setItem('voorstel-note-'+voorstelId.toString(), noteTextElement.value);
         voegPenToe(voorstelId);
@@ -138,22 +137,27 @@ function saveNote(voorstelId) {
         localStorage.removeItem('voorstel-note-'+voorstelId.toString());
         verwijderPen(voorstelId);
     }
-    saveButton.innerHTML = '<span class="glyphicon glyphicon-floppy-saved"></span>';
 }
 
 function openNote(voorstelId, unconditional) {
     'use strict';
-    var voorstelNoteText = document.getElementById('voorstel-note-'+voorstelId.toString()).value;
-    var saveButton = document.getElementById('savebutton'+voorstelId.toString());
-    saveButton.innerHTML = '<span class="glyphicon glyphicon-floppy-disk"></span>';
+    var voorstelNoteText = localStorage.getItem('voorstel-note-'+voorstelId.toString());
+    if (voorstelNoteText == null) {
+        voorstelNoteText = "";
+    }
+    
+    document.getElementById('voorstel-note-'+ voorstelId.toString()).value = voorstelNoteText;
     if (voorstelNoteText != "" || unconditional) {
         $('#voorstel'+voorstelId.toString()+' .notetoggleinv').collapse('hide');
         $('#voorstel'+voorstelId.toString()+' .notetoggle').collapse('show');
+        $('.footerclosebutton').html('<span class="glyphicon glyphicon-floppy-disk"></span>');
     }
     else {
         $('#voorstel'+voorstelId.toString()+' .notetoggle').collapse('hide');
         $('#voorstel'+voorstelId.toString()+' .notetoggleinv').collapse('show');
+        $('.footerclosebutton').html('<span class="glyphicon glyphicon-log-out"></span>');
     }
+    
 }
 
 function voegPenToe(voorstelId) {
@@ -330,18 +334,12 @@ function loadMotiesPagina() {
 				voorstelfooter.setAttribute('class', 'modal-footer');
                 
                 var footernotebutton = document.createElement('button');
-                footernotebutton.setAttribute('class', 'btn btn-warning pull-left notetoggleinv collapse in');
+                footernotebutton.setAttribute('class', 'btn btn-warning notetoggleinv pull-right collapse in');
                 footernotebutton.setAttribute('onclick', 'openNote('+j.toString()+', true)');
                 footernotebutton.innerHTML = '<span class="glyphicon glyphicon-pencil"></span>';
 				
-                var footersavebutton = document.createElement('button');
-                footersavebutton.setAttribute('class', 'btn btn-default pull-left notetoggle collapse');
-                footersavebutton.setAttribute('id', 'savebutton'+j.toString());
-                footersavebutton.setAttribute('onclick', 'saveNote('+j.toString()+')');
-                footersavebutton.innerHTML = '<span class="glyphicon glyphicon-floppy-disk"></span>';
-                
                 var footerstembuttons = document.createElement('div');
-                footerstembuttons.setAttribute('class', 'btn-group');
+                footerstembuttons.setAttribute('class', 'btn-group pull-left');
                 footerstembuttons.setAttribute('data-toggle', 'buttons');
                 
                 var footervoorbutton = document.createElement('label');
@@ -358,14 +356,14 @@ function loadMotiesPagina() {
                 footerstembuttons.appendChild(footertegenbutton);
                 
                 var footerclosebutton = document.createElement('button');
-				footerclosebutton.setAttribute('class', 'btn btn-default');
+				footerclosebutton.setAttribute('class', 'footerclosebutton btn btn-default pull-right');
 				footerclosebutton.setAttribute('data-dismiss', 'modal');
-				footerclosebutton.appendChild(document.createTextNode('Sluit'));
+                footerclosebutton.setAttribute('onclick', 'saveNote('+j.toString()+')');
+				footerclosebutton.innerHTML = '<span class="glyphicon glyphicon-log-out"></span>';
                 
-                voorstelfooter.appendChild(footernotebutton);
-                voorstelfooter.appendChild(footersavebutton);
-                voorstelfooter.appendChild(footerstembuttons);
                 voorstelfooter.appendChild(footerclosebutton);
+                voorstelfooter.appendChild(footernotebutton);
+                voorstelfooter.appendChild(footerstembuttons);
 				voorstelcontent.appendChild(voorstelheader);
 				voorstelcontent.appendChild(voorstelbody);
                 voorstelcontent.appendChild(voorstelnote);
