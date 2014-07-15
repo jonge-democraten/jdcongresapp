@@ -147,6 +147,7 @@ function openNote(voorstelId, unconditional) {
     }
     
     document.getElementById('voorstel-note-'+ voorstelId.toString()).value = voorstelNoteText;
+    $("#voorstel-note-"+voorstelId.toString()).elastic();
     if (voorstelNoteText != "" || unconditional) {
         $('#voorstel'+voorstelId.toString()+' .notetoggleinv').collapse('hide');
         $('#voorstel'+voorstelId.toString()+' .notetoggle').collapse('show');
@@ -322,7 +323,7 @@ function loadMotiesPagina() {
                 voorstelnote.setAttribute('class', 'modal-body notetoggle collapse');
                 var voorstelnotetext = document.createElement('textarea');
                 voorstelnotetext.setAttribute('id', 'voorstel-note-'+ j.toString());
-                voorstelnotetext.setAttribute('class', 'form-control');
+                voorstelnotetext.setAttribute('class', 'elastictextarea form-control');
                 if (localStorage.getItem('voorstel-note-'+j.toString()) != null) voorstelnotetext.innerHTML = localStorage.getItem('voorstel-note-'+j.toString());
                 voorstelnote.appendChild(voorstelnotetext);
                 
@@ -381,6 +382,7 @@ function loadMotiesPagina() {
 	document.getElementById('main').appendChild(voorstelteksten);
     $('.notetoggle').collapse();
     $('.notetoggleinv').collapse();
+    //$('.elastictextarea').elastic();
     setAllPens(j);
 }
 
