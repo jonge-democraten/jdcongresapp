@@ -1,3 +1,5 @@
+var activateExport = false;
+
 function activateMenuItem(item) {
     'use strict';
     if (item === 'homemenuitem') {
@@ -60,6 +62,7 @@ function loadHomePagina() {
 }
 
 function pad(number) {
+    'use strict';
     if (number >= 0 && number < 10) {
         return "0"+number.toString();
     }
@@ -106,6 +109,7 @@ function loadAgendaPagina() {
 }
 
 function compareVoorstellen(voorstelA, voorstelB) {
+    'use strict';
 	if (voorstelA['id'] < voorstelB['id'])
 		return -1;
 	if (voorstelA['id'] > voorstelB['id'])
@@ -114,6 +118,7 @@ function compareVoorstellen(voorstelA, voorstelB) {
 }
 
 function setVoorkeur(voorstelId, voorkeur) {
+    'use strict';
     localStorage.setItem('voorkeur-voorstel-'+voorstelId.toString(), voorkeur);
     var voorstelLink = document.getElementById('voorstellistitem'+voorstelId.toString());
     if (voorkeur == "voor") voorstelLink.setAttribute('class', "list-group-item list-group-item-success");
@@ -122,6 +127,7 @@ function setVoorkeur(voorstelId, voorkeur) {
 }
 
 function saveNote(voorstelId) {
+    'use strict';
     var noteTextElement = document.getElementById('voorstel-note-'+voorstelId.toString());
     var saveButton = document.getElementById('savebutton'+voorstelId.toString());
     if (noteTextElement.value != "") {
@@ -136,6 +142,7 @@ function saveNote(voorstelId) {
 }
 
 function openNote(voorstelId, unconditional) {
+    'use strict';
     var voorstelNoteText = document.getElementById('voorstel-note-'+voorstelId.toString()).value;
     var saveButton = document.getElementById('savebutton'+voorstelId.toString());
     saveButton.innerHTML = '<span class="glyphicon glyphicon-floppy-disk"></span>';
@@ -150,6 +157,7 @@ function openNote(voorstelId, unconditional) {
 }
 
 function voegPenToe(voorstelId) {
+    'use strict';
     var link = document.getElementById("voorstellistitem"+voorstelId.toString());
     var searchPencil = link.getElementsByTagName('span');
     if (searchPencil.length == 0) {
@@ -160,6 +168,7 @@ function voegPenToe(voorstelId) {
 }
 
 function verwijderPen(voorstelId) {
+    'use strict';
     var link = document.getElementById("voorstellistitem"+voorstelId.toString());
     var searchPencil = link.getElementsByTagName('span');
     if (searchPencil.length != 0) {
@@ -168,12 +177,14 @@ function verwijderPen(voorstelId) {
 }
 
 function updatePen(voorstelId) {
+    'use strict';
     if (localStorage.getItem('voorstel-note-'+voorstelId.toString()) != null) voegPenToe(voorstelId);
     else verwijderPen(voorstelId);
 }
 
 function setAllPens(maxVoorstelId) {
-    for (i=1; i <= maxVoorstelId; i++) {
+    'use strict';
+    for (var i=1; i <= maxVoorstelId; i++) {
         updatePen(i);
     }
 }
@@ -376,6 +387,7 @@ function loadMotiesPagina() {
 }
 
 function transformExtent(coordinates) {
+    'use strict';
     var onecorner = ol.proj.transform([coordinates[0], coordinates[1]], "EPSG:4326", "EPSG:900913");
     var othercorner = ol.proj.transform([coordinates[2], coordinates[3]], "EPSG:4326", "EPSG:900913");
     return [
@@ -387,6 +399,7 @@ function transformExtent(coordinates) {
 }
 
 function locatiesToExtent(locaties) {
+    'use strict';
     var lonmin = locaties[0]['long'];
     var lonmax = lonmin;
     var latmin = locaties[0]['lat'];
@@ -530,6 +543,7 @@ function loadTwitterPagina() {
 }
 
 function resetLocalStorage() {
+    'use strict';
     localStorage.clear();
     location.reload(true);
 }
@@ -539,6 +553,7 @@ function loadInstellingenPagina() {
     activateMenuItem('instellingenmenuitem');
     document.getElementById('main').innerHTML = '';
     
+    // Panel voor reset-button
     var resetPanel = document.createElement('div');
     resetPanel.setAttribute('class', 'panel panel-default');
     
@@ -559,12 +574,81 @@ function loadInstellingenPagina() {
     var resetButton = document.createElement('button');
     resetButton.setAttribute('class', 'btn btn-primary pull-right');
     resetButton.setAttribute('onclick', 'resetLocalStorage()');
-    resetButton.innerHTML = "Reset";
+    resetButton.innerHTML = '<span class="glyphicon glyphicon-repeat"></span>';
     resetBody.appendChild(resetButton);
     
     resetPanel.appendChild(resetBody);
     
     document.getElementById('main').appendChild(resetPanel);
+    
+    // Panel voor store-button
+    var storePanel = document.createElement('div');
+    storePanel.setAttribute('class', 'panel panel-default');
+    
+    var storeHeader = document.createElement('div');
+    storeHeader.setAttribute('class', 'panel-heading');
+    storeHeader.appendChild(document.createTextNode("Exporteer aantekeningen en voorkeuren"));
+    
+    storePanel.appendChild(storeHeader);
+    
+    var storeBody = document.createElement('div');
+    storeBody.setAttribute('class', 'panel-body');
+    
+    var storeBodyText = document.createElement('div');
+    storeBodyText.setAttribute('class', 'pull-left');
+    storeBodyText.appendChild(document.createTextNode("Exporteer alle informatie uit de app, inclusief aantekeningen en voorkeuren, naar de server. Met de Importeer-functie kun je deze op een ander apparaat weer inladen. Alle informatie wordt versleuteld voor verzending en is dus niet voor de beheerders in te zien."));
+    storeBody.appendChild(storeBodyText);
+
+    var storeButton = document.createElement('button');
+    storeButton.setAttribute('class', 'btn btn-primary pull-right');
+    storeButton.setAttribute('onclick', 'exportData()');
+    storeButton.innerHTML = '<span class="glyphicon glyphicon-cloud-upload"></span>';
+    storeBody.appendChild(storeButton);
+    
+    storePanel.appendChild(storeBody);
+    
+    if (activateExport) {
+        document.getElementById('main').appendChild(storePanel);
+    }
+    
+    // Panel voor restore-button
+    var restorePanel = document.createElement('div');
+    restorePanel.setAttribute('class', 'panel panel-default');
+    
+    var restoreHeader = document.createElement('div');
+    restoreHeader.setAttribute('class', 'panel-heading');
+    restoreHeader.appendChild(document.createTextNode("Importeer aantekeningen en voorkeuren"));
+    
+    restorePanel.appendChild(restoreHeader);
+    
+    var restoreBody = document.createElement('div');
+    restoreBody.setAttribute('class', 'panel-body');
+    
+    var restoreBodyText = document.createElement('div');
+    restoreBodyText.setAttribute('class', 'pull-left');
+    restoreBodyText.appendChild(document.createTextNode("Importeer geëxporteerde informatie vanaf de server."));
+    restoreBody.appendChild(restoreBodyText);
+
+    var restoreButton = document.createElement('button');
+    restoreButton.setAttribute('class', 'btn btn-primary pull-right');
+    restoreButton.setAttribute('data-toggle', 'collapse');
+    restoreButton.setAttribute('data-target', '#enterexportcode');
+    restoreButton.innerHTML = '<span class="glyphicon glyphicon-cloud-download"></span>';
+    restoreBody.appendChild(restoreButton);
+    
+    var enterExportCode = document.createElement('div');
+    enterExportCode.setAttribute('class', 'panel-body collapse');
+    enterExportCode.setAttribute('id', 'enterexportcode');
+    enterExportCode.innerHTML = 'Voer de exportcode in: <input type="text" id="exportcodeinvoer" class="form-control"><button class="btn btn-primary" onclick="importData()"><span class="glyphicon glyphicon-ok"></span></button>';
+    restoreBody.appendChild(enterExportCode);
+    
+    restorePanel.appendChild(restoreBody);
+    restorePanel.appendChild(enterExportCode);
+    
+    if (activateExport) {
+        document.getElementById('main').appendChild(restorePanel);
+    }
+    
 }
 
 function loadDb(onload, onerr) {
@@ -592,4 +676,184 @@ function loadDb(onload, onerr) {
 	xhr.send();
 }
 
+function exportData() {
+    'use strict';
+    var storedInfo = stringifyLocalStorage();
+    
+    console.debug(storedInfo['ciphertext']);
+    console.debug(storedInfo['iv']);
+    console.debug(storedInfo['salt']);
+    console.debug(storedInfo['passphrase']);
+    
+    var ciphertext = storedInfo['ciphertext'];
+    var iv = storedInfo['iv'];
+    var salt = storedInfo['salt'];
+    var passphrase = storedInfo['passphrase'];
+    storedInfo['passphrase'] = '';
+    
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'export.php', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+    xhr.onload = function(e) {
+        if (this.status === 200) {
+            var data = this.responseText;
+            if (!document.getElementById('codepopup')) {
+                var codePopup = document.createElement('div');
+                codePopup.setAttribute('class', 'modal fade');
+                codePopup.setAttribute('id', 'codepopup');
+                codePopup.setAttribute('tabindex', '-1'); // For Esc key to work
+                
+                var codePopupDialog = document.createElement('div');
+                codePopupDialog.setAttribute('class', 'modal-dialog');
+                
+                var codePopupContent = document.createElement('div');
+                codePopupContent.setAttribute('class', 'modal-content');
+                
+                var codePopupHeader = document.createElement('div');
+                codePopupHeader.setAttribute('class', 'modal-header');
+                
+                var closebutton = document.createElement('button');
+                closebutton.setAttribute('type', 'button');
+                closebutton.setAttribute('class', 'close');
+                closebutton.setAttribute('data-dismiss', 'modal');
+                closebutton.appendChild(document.createTextNode('\u00d7'));
+                
+                codePopupHeader.appendChild(closebutton);
+                codePopupHeader.appendChild(document.createTextNode("Exporteren succesvol"));
+                
+                var codePopupBody = document.createElement('div');
+                codePopupBody.setAttribute('class', 'modal-body');
+                codePopupBody.setAttribute('id', 'exportcode');
+                
+                codePopupContent.appendChild(codePopupHeader);
+                codePopupContent.appendChild(codePopupBody);
+                codePopupDialog.appendChild(codePopupContent);
+                codePopup.appendChild(codePopupDialog);
+                document.getElementById('main').appendChild(codePopup);
+            }
+            
+            document.getElementById('exportcode').innerHTML = '';
+            document.getElementById('exportcode').appendChild(document.createTextNode("Export is succesvol verlopen. Kopieer onderstaande code om de geëxporteerde informatie op een ander apparaat te importeren."));
+            
+            var codeField = document.createElement('div');
+            codeField.innerHTML = '<input type="text" class="form-control" readonly="readonly" value="'+data+passphrase+'">';
+            
+            document.getElementById('exportcode').appendChild(codeField);
+            $('#codepopup').modal('show');
+        }
+    };
+    xhr.send('data='+JSON.stringify(storedInfo));
+}
 
+function stringifyLocalStorage() {
+    'use strict';
+    
+    var passphrase = CryptoJS.lib.WordArray.random(128/8).toString(CryptoJS.enc.Hex);
+    
+    var storedInfo = {};
+    
+    for (var i = 0; i < localStorage.length; i++) {
+        var key = localStorage.key(i);
+        var content = localStorage.getItem(key);
+        storedInfo[key] = content;
+    }
+    
+    var message = JSON.stringify(storedInfo);
+    
+    var encryptedInfo = CryptoJS.AES.encrypt(message, passphrase);
+    
+    return {
+        ciphertext: encryptedInfo.ciphertext.toString(CryptoJS.enc.Hex),
+        iv: encryptedInfo.iv.toString(),
+        salt: encryptedInfo.salt.toString(),
+        passphrase: passphrase
+    };
+}
+
+function importData() {
+    'use strict';
+    
+    var exportcode = document.getElementById('exportcodeinvoer').value;
+    var index = exportcode.slice(0,32);
+    var passphrase = exportcode.slice(32,64);
+    
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'export.php?iv='+index, true);
+    
+    xhr.onload = function(e) {
+        if (this.status === 200) {
+            var data = JSON.parse(this.responseText);
+            
+            console.debug(data['ciphertext']);
+            console.debug(data['iv']);
+            console.debug(data['salt']);
+            console.debug(passphrase);
+            
+            restoreLocalStorage(data['ciphertext'], passphrase, data['iv'], data['salt']);
+            
+            if (!document.getElementById('importpopup')) {
+                var importPopup = document.createElement('div');
+                importPopup.setAttribute('class', 'modal fade');
+                importPopup.setAttribute('id', 'importpopup');
+                importPopup.setAttribute('tabindex', '-1'); // For Esc key to work
+                
+                var importPopupDialog = document.createElement('div');
+                importPopupDialog.setAttribute('class', 'modal-dialog');
+                
+                var importPopupContent = document.createElement('div');
+                importPopupContent.setAttribute('class', 'modal-content');
+                
+                var importPopupHeader = document.createElement('div');
+                importPopupHeader.setAttribute('class', 'modal-header');
+                
+                var closebutton = document.createElement('button');
+                closebutton.setAttribute('type', 'button');
+                closebutton.setAttribute('class', 'close');
+                closebutton.setAttribute('data-dismiss', 'modal');
+                closebutton.appendChild(document.createTextNode('\u00d7'));
+                
+                importPopupHeader.appendChild(closebutton);
+                importPopupHeader.appendChild(document.createTextNode("Importeren succesvol"));
+                    
+                var importPopupBody = document.createElement('div');
+                importPopupBody.setAttribute('class', 'modal-body');
+                
+                importPopupBody.appendChild(document.createTextNode("Importeren is gelukt."));
+                
+                importPopupContent.appendChild(importPopupHeader);
+                importPopupContent.appendChild(importPopupBody);
+                importPopupDialog.appendChild(importPopupContent);
+                importPopup.appendChild(importPopupDialog);
+                document.getElementById('main').appendChild(importPopup);
+            }
+            
+            $('#enterexportcode').collapse('hide');
+            $('#importpopup').modal('show');
+        }
+    };
+    
+    xhr.send();    
+}
+
+function restoreLocalStorage(ciphertext, passphrase, iv, salt) {
+    'use strict';
+    
+    var cipherParams = CryptoJS.lib.CipherParams.create({
+        ciphertext: CryptoJS.enc.Hex.parse(ciphertext),
+        iv: CryptoJS.enc.Hex.parse(iv),
+        salt: CryptoJS.enc.Hex.parse(salt)
+    });
+    
+    var decrypted = CryptoJS.AES.decrypt(cipherParams, passphrase);
+    var infoStringToRestore = decrypted.toString(CryptoJS.enc.Utf8);
+
+    localStorage.clear();
+    
+    var infoToRestore = JSON.parse(infoStringToRestore);
+    
+    for (var key in infoToRestore) {
+        if (infoToRestore.hasOwnProperty(key)) {
+            localStorage.setItem(key, infoToRestore[key]);
+        }
+    }
+}
