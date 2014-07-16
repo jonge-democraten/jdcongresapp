@@ -479,9 +479,9 @@ function loadLocatiesPagina() {
     
     var iconStyle = new ol.style.Style({
         image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
-            anchor: [0.5, 32],
+            anchor: [0.5, 0.5],
             anchorXUnits: 'fraction',
-            anchorYUnits: 'pixels',
+            anchorYUnits: 'fraction',
             src: 'data/icon.png'
         }))
     });
