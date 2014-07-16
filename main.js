@@ -577,10 +577,70 @@ function resetLocalStorage() {
     location.reload(true);
 }
 
+function setFontSize(fontSize) {
+    'use strict';
+    if (fontSize == 'L') {
+        document.getElementById('theBody').style.fontSize = '14px';
+    }
+    else if (fontSize == 'S') {
+        document.getElementById('theBody').style.fontSize = '10px';
+    }
+    else {
+        document.getElementById('theBody').style.fontSize = '12px';
+    }
+}
+
 function loadInstellingenPagina() {
     'use strict';
     activateMenuItem('instellingenmenuitem');
     document.getElementById('main').innerHTML = '';
+    
+    // Panel voor tekstgrootte
+    var sizePanel = document.createElement('div');
+    sizePanel.setAttribute('class', 'panel panel-default');
+    
+    var sizeHeader = document.createElement('div');
+    sizeHeader.setAttribute('class', 'panel-heading');
+    sizeHeader.appendChild(document.createTextNode("Tekstformaat"));
+    
+    sizePanel.appendChild(sizeHeader);
+    
+    var sizeBody = document.createElement('div');
+    sizeBody.setAttribute('class', 'panel-body');
+    
+    var sizeBodyText = document.createElement('div');
+    sizeBodyText.setAttribute('class', 'pull-left');
+    sizeBodyText.appendChild(document.createTextNode("Maak de tekst in de app een beetje groter of kleiner."));
+    sizeBody.appendChild(sizeBodyText);
+
+    var sizebuttons = document.createElement('div');
+    sizebuttons.setAttribute('class', 'btn-group pull-right');
+    sizebuttons.setAttribute('data-toggle', 'buttons');
+    
+    var sizesmallbutton = document.createElement('label');
+    sizesmallbutton.setAttribute('class', 'btn btn-default');
+    sizesmallbutton.setAttribute('onclick', 'setFontSize("S")');
+    sizesmallbutton.innerHTML = '<input type="radio" name="options"><span class="glyphicon glyphicon-chevron-down"></span></label>';
+    
+    var sizemediumbutton = document.createElement('label');
+    sizemediumbutton.setAttribute('class', 'btn btn-default');
+    sizemediumbutton.setAttribute('onclick', 'setFontSize("M")');
+    sizemediumbutton.innerHTML = '<input type="radio" name="options"><span class="glyphicon glyphicon-minus"></span></label>';
+    
+    var sizelargebutton = document.createElement('label');
+    sizelargebutton.setAttribute('class', 'btn btn-default');
+    sizelargebutton.setAttribute('onclick', 'setFontSize("L")');
+    sizelargebutton.innerHTML = '<input type="radio" name="options"><span class="glyphicon glyphicon-chevron-up"></span></label>';
+    
+    sizebuttons.appendChild(sizesmallbutton);
+    sizebuttons.appendChild(sizemediumbutton);
+    sizebuttons.appendChild(sizelargebutton);
+    
+    sizeBody.appendChild(sizebuttons);
+    
+    sizePanel.appendChild(sizeBody);
+    
+    document.getElementById('main').appendChild(sizePanel);
     
     // Panel voor reset-button
     var resetPanel = document.createElement('div');
