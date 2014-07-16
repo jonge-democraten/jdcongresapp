@@ -153,14 +153,35 @@ function openNote(voorstelId, unconditional) {
     if (voorstelNoteText != "" || unconditional) {
         $('#voorstel'+voorstelId.toString()+' .notetoggleinv').collapse('hide');
         $('#voorstel'+voorstelId.toString()+' .notetoggle').collapse('show');
-        $('.footerclosebutton').html('<span class="glyphicon glyphicon-floppy-disk"></span>');
+        $('#voorstel'+voorstelId.toString()+' .footernotebutton').html('<span class="glyphicon glyphicon-trash"></span>');
+        $('#voorstel'+voorstelId.toString()+' .footernotebutton').removeClass('btn-warning').addClass('btn-danger');
+        $('#voorstel'+voorstelId.toString()+' .footernotebutton').attr('onclick', 'clearNote('+voorstelId.toString()+')');
+        $('#voorstel'+voorstelId.toString()+' .footerclosebutton').html('<span class="glyphicon glyphicon-floppy-disk"></span>');
     }
     else {
         $('#voorstel'+voorstelId.toString()+' .notetoggle').collapse('hide');
         $('#voorstel'+voorstelId.toString()+' .notetoggleinv').collapse('show');
-        $('.footerclosebutton').html('<span class="glyphicon glyphicon-log-out"></span>');
+        $('#voorstel'+voorstelId.toString()+' .footernotebutton').html('<span class="glyphicon glyphicon-pencil"></span>');
+        $('#voorstel'+voorstelId.toString()+' .footernotebutton').removeClass('btn-danger').addClass('btn-warning');
+        $('#voorstel'+voorstelId.toString()+' .footernotebutton').attr('onclick', 'openNote('+voorstelId.toString()+', true)')
+        $('#voorstel'+voorstelId.toString()+' .footerclosebutton').html('<span class="glyphicon glyphicon-log-out"></span>');
     }
+}
+
+function clearNote(voorstelId) {
+    'use strict';
+    document.getElementById('voorstel-note-'+ voorstelId.toString()).value = "";
     
+    $("#voorstel-note-"+voorstelId.toString()).elastic();
+    
+    $('#voorstel'+voorstelId.toString()+' .notetoggle').collapse('hide');
+    $('#voorstel'+voorstelId.toString()+' .notetoggleinv').collapse('show');
+    $('#voorstel'+voorstelId.toString()+' .footernotebutton').html('<span class="glyphicon glyphicon-pencil"></span>');
+    $('#voorstel'+voorstelId.toString()+' .footernotebutton').removeClass('btn-danger').addClass('btn-warning');
+    $('#voorstel'+voorstelId.toString()+' .footernotebutton').attr('onclick', 'openNote('+voorstelId.toString()+', true)')
+    $('#voorstel'+voorstelId.toString()+' .footerclosebutton').html('<span class="glyphicon glyphicon-log-out"></span>');
+    
+    saveNote(voorstelId);
 }
 
 function voegPenToe(voorstelId) {
@@ -255,7 +276,7 @@ function loadMotiesPagina() {
 				group.appendChild(link);
                 // Toevoegen aan de modal-lijst:
                 var voorsteltekst = document.createElement('div');
-				voorsteltekst.setAttribute('class', 'modal fade');
+				voorsteltekst.setAttribute('class', 'modal');
 				voorsteltekst.setAttribute('id', 'voorstel' + j.toString());
 				voorsteltekst.setAttribute('tabindex', '-1'); // For Esc key to work
 				
@@ -338,7 +359,7 @@ function loadMotiesPagina() {
 				voorstelfooter.setAttribute('class', 'modal-footer');
                 
                 var footernotebutton = document.createElement('button');
-                footernotebutton.setAttribute('class', 'btn btn-warning notetoggleinv pull-right collapse in');
+                footernotebutton.setAttribute('class', 'btn btn-warning footernotebutton pull-right');
                 footernotebutton.setAttribute('onclick', 'openNote('+j.toString()+', true)');
                 footernotebutton.innerHTML = '<span class="glyphicon glyphicon-pencil"></span>';
 				
@@ -707,7 +728,7 @@ function exportData() {
             var data = this.responseText;
             if (!document.getElementById('codepopup')) {
                 var codePopup = document.createElement('div');
-                codePopup.setAttribute('class', 'modal fade');
+                codePopup.setAttribute('class', 'modal');
                 codePopup.setAttribute('id', 'codepopup');
                 codePopup.setAttribute('tabindex', '-1'); // For Esc key to work
                 
@@ -801,7 +822,7 @@ function importData() {
             
             if (!document.getElementById('importpopup')) {
                 var importPopup = document.createElement('div');
-                importPopup.setAttribute('class', 'modal fade');
+                importPopup.setAttribute('class', 'modal');
                 importPopup.setAttribute('id', 'importpopup');
                 importPopup.setAttribute('tabindex', '-1'); // For Esc key to work
                 
