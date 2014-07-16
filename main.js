@@ -41,6 +41,7 @@ function loadHomePagina() {
     var content = JSON.parse(localStorage.getItem('nieuwsitems'));
     if (content === null) {
         loadDb(loadHomePagina, function(){alert('Kan database niet laden. Probeer later opnieuw.');});
+        return;
 	}
     document.getElementById('main').innerHTML = '';
     content.forEach(function(nieuwsitem){
@@ -75,6 +76,7 @@ function loadAgendaPagina() {
 	var agenda = JSON.parse(localStorage.getItem("agenda"));
 	if (agenda === null) {
 		loadDb(loadAgendaPagina, function(){alert('Kan database niet laden. Probeer later opnieuw.');});
+        return;
 	}
     document.getElementById('main').innerHTML = '';
 	agenda.forEach(function(day) {
@@ -201,6 +203,7 @@ function loadMotiesPagina() {
 	var voorstellen = JSON.parse(localStorage.getItem("voorstellen"));
 	if (voorstellen === null) {
 		loadDb(loadMotiesPagina, function(){alert('Kan database niet laden. Probeer later opnieuw.');});
+        return;
 	}
     document.getElementById('main').innerHTML = '';
 	var i = 0; // Index voor groepen
@@ -443,6 +446,7 @@ function loadLocatiesPagina() {
     var locaties = JSON.parse(localStorage.getItem("locaties"));
 	if (locaties === null) {
 		loadDb(loadLocatiesPagina, function(){alert('Kan database niet laden. Probeer later opnieuw.');});
+        return;
 	}
 	var mapdiv = document.createElement('div');
     mapdiv.setAttribute('id', 'map');
