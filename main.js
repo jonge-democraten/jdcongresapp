@@ -196,19 +196,20 @@ function setAllPens(maxVoorstelId) {
 
 function loadMotiesPagina() {
 	'use strict';
+
 	activateMenuItem('motiesmenuitem');
 	var voorstellen = JSON.parse(localStorage.getItem("voorstellen"));
 	if (voorstellen === null) {
 		loadDb(loadMotiesPagina, function(){alert('Kan database niet laden. Probeer later opnieuw.');});
 	}
-	document.getElementById('main').innerHTML = '';
+    document.getElementById('main').innerHTML = '';
 	var i = 0; // Index voor groepen
 	var j = 0; // Index voor voorstellen
 	var voorstelteksten = document.createElement('div'); // We slaan de voorstelteksten buiten de collapse-structuur op
 	voorstelteksten.setAttribute('id', 'voorstelteksten');
 	
 	for (var key in voorstellen) { // We lopen over de verschillende groepen voorstellen heen
-		if (voorstellen.hasOwnProperty(key)) {
+        if (voorstellen.hasOwnProperty(key)) {
 			// Per voorstelgroep hebben we een collapsible panel dat standaard dicht staat
 			i = i+1;
 			var panel = document.createElement('div');
@@ -229,7 +230,7 @@ function loadMotiesPagina() {
 			voorstellen[key].sort(compareVoorstellen); // We sorteren de voorstellen op id (want in die volgorde staan ze ook in het congresboek)
             var hasVoorstellen = false;
 			voorstellen[key].forEach(function(voorstel) { // Elk voorstel voegen we toe aan het panel (alleen id + titel) en de modal-lijst
-				j = j + 1;
+                j = j + 1;
                 hasVoorstellen = true;
 				
                 // Toevoegen aan het panel:
@@ -249,9 +250,8 @@ function loadMotiesPagina() {
                 }
 				link.innerHTML = voorstel['id'] + " " + voorstel['titel'];
 				group.appendChild(link);
-				
                 // Toevoegen aan de modal-lijst:
-				var voorsteltekst = document.createElement('div');
+                var voorsteltekst = document.createElement('div');
 				voorsteltekst.setAttribute('class', 'modal fade');
 				voorsteltekst.setAttribute('id', 'voorstel' + j.toString());
 				voorsteltekst.setAttribute('tabindex', '-1'); // For Esc key to work
@@ -378,16 +378,15 @@ function loadMotiesPagina() {
 				voorsteldialog.appendChild(voorstelcontent);
 				voorsteltekst.appendChild(voorsteldialog);
 				voorstelteksten.appendChild(voorsteltekst);
-                
-			});
+            });
 			collapsible_content.appendChild(group);
 			panel.appendChild(collapsible_content);
 			if (hasVoorstellen) document.getElementById('main').appendChild(panel);
 		}
 	}
 	document.getElementById('main').appendChild(voorstelteksten);
-    $('.notetoggle').collapse();
-    $('.notetoggleinv').collapse();
+    $('.notetoggle').collapse({ toggle: false });
+    $('.notetoggleinv').collapse({ toggle: false });
     setAllPens(j);
 }
 
