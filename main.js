@@ -346,14 +346,20 @@ function loadMotiesPagina() {
                 var footervoorbutton = document.createElement('label');
                 footervoorbutton.setAttribute('class', 'btn btn-success');
                 footervoorbutton.setAttribute('onclick', 'setVoorkeur('+j.toString()+', "voor")');
-                footervoorbutton.innerHTML = '<input type="radio" name="options"><span class="glyphicon glyphicon-ok"></span></label>';
-				
+                footervoorbutton.innerHTML = '<input type="radio" name="options"><span class="glyphicon glyphicon-thumbs-up"></span></label>';
+                
+                var footerneutraalbutton = document.createElement('label');
+                footerneutraalbutton.setAttribute('class', 'btn btn-default');
+                footerneutraalbutton.setAttribute('onclick', 'setVoorkeur('+j.toString()+', "neutraal")');
+                footerneutraalbutton.innerHTML = '<input type="radio" name="options"><span class="glyphicon glyphicon-ban-circle"></span></label>';
+                
                 var footertegenbutton = document.createElement('label');
                 footertegenbutton.setAttribute('class', 'btn btn-danger');
                 footertegenbutton.setAttribute('onclick', 'setVoorkeur('+j.toString()+', "tegen")');
-                footertegenbutton.innerHTML = '<input type="radio" name="options"><span class="glyphicon glyphicon-remove"></span></label>';
+                footertegenbutton.innerHTML = '<input type="radio" name="options"><span class="glyphicon glyphicon-thumbs-down"></span></label>';
                 
                 footerstembuttons.appendChild(footervoorbutton);
+                footerstembuttons.appendChild(footerneutraalbutton);
                 footerstembuttons.appendChild(footertegenbutton);
                 
                 var footerclosebutton = document.createElement('button');
@@ -382,7 +388,6 @@ function loadMotiesPagina() {
 	document.getElementById('main').appendChild(voorstelteksten);
     $('.notetoggle').collapse();
     $('.notetoggleinv').collapse();
-    //$('.elastictextarea').elastic();
     setAllPens(j);
 }
 
