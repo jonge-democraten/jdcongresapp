@@ -247,10 +247,8 @@ function loadMotiesPagina() {
 			
 			// De voorsteltitels worden in het panel opgenomen, standaard ingeklapt
 			var collapsible_content = document.createElement('div');
-			collapsible_content.setAttribute('class', 'panel-collapse collapse');
+			collapsible_content.setAttribute('class', 'list-group panel-collapse collapse');
 			collapsible_content.setAttribute('id', 'collapse'+i.toString());
-			var group = document.createElement('div');
-			group.setAttribute('class', 'list-group');
 			voorstellen[key].sort(compareVoorstellen); // We sorteren de voorstellen op id (want in die volgorde staan ze ook in het congresboek)
             var hasVoorstellen = false;
 			voorstellen[key].forEach(function(voorstel) { // Elk voorstel voegen we toe aan het panel (alleen id + titel) en de modal-lijst
@@ -273,7 +271,7 @@ function loadMotiesPagina() {
                     link.setAttribute('class', 'list-group-item');
                 }
 				link.innerHTML = voorstel['id'] + " " + voorstel['titel'];
-				group.appendChild(link);
+				collapsible_content.appendChild(link);
                 // Toevoegen aan de modal-lijst:
                 var voorsteltekst = document.createElement('div');
 				voorsteltekst.setAttribute('class', 'modal');
@@ -403,7 +401,6 @@ function loadMotiesPagina() {
 				voorsteltekst.appendChild(voorsteldialog);
 				voorstelteksten.appendChild(voorsteltekst);
             });
-			collapsible_content.appendChild(group);
 			panel.appendChild(collapsible_content);
 			if (hasVoorstellen) document.getElementById('main').appendChild(panel);
 		}
