@@ -411,6 +411,16 @@ function loadMotiesPagina() {
                 footertegenbutton.setAttribute('onclick', 'setVoorkeur('+j.toString()+', "tegen")');
                 footertegenbutton.innerHTML = '<input type="radio" name="options"><span class="glyphicon glyphicon-thumbs-down"></span></label>';
                 
+                if (localStorage.getItem('voorkeur-voorstel-'+j.toString()) == "voor") {
+                    $(footervoorbutton).addClass('active');
+                }
+                else if (localStorage.getItem('voorkeur-voorstel-'+j.toString()) == "tegen") {
+                    $(footertegenbutton).addClass('active');
+                }
+                else {
+                    $(footerneutraalbutton).addClass('active');
+                }
+                
                 footerstembuttons.appendChild(footervoorbutton);
                 footerstembuttons.appendChild(footerneutraalbutton);
                 footerstembuttons.appendChild(footertegenbutton);
