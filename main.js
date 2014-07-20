@@ -217,6 +217,36 @@ function setAllPens(maxVoorstelId) {
     }
 }
 
+function setSwipeHandlers(maxVoorstelId) {
+    'use strict';
+    for (var i = 1; i <= maxVoorstelId; i++) {
+        $('#voorstelbody'+i.toString()).swipe( {
+            swipeLeft:function(event, direction, distance, duration, fingerCount, fingerData) {
+                var voorstel = $(this).parent().parent().parent();
+                var targetId = parseInt($(event.target).parents('.modal').attr('id').split('voorstel')[1]);
+                
+                if (direction == "left") {
+                    voorstel.modal('hide');
+                    saveNote(targetId);
+                    if (document.getElementById('voorstel'+(targetId+1).toString())) openNote(targetId+1);
+                    voorstel.next('.modal').modal('show');
+                }
+            },
+            swipeRight:function(event, direction, distance, duration, fingerCount, fingerData) {
+                var voorstel = $(this).parent().parent().parent();
+                var targetId = parseInt($(event.target).parents('.modal').attr('id').split('voorstel')[1]);
+                
+                if (direction == "right") {
+                    voorstel.modal('hide');
+                    saveNote(targetId);
+                    if (document.getElementById('voorstel'+(targetId-1).toString())) openNote(targetId-1);
+                    voorstel.prev('.modal').modal('show');
+                }
+            }
+        });
+    }
+}
+
 function loadMotiesPagina() {
 	'use strict';
 
@@ -298,6 +328,7 @@ function loadMotiesPagina() {
 				
                 var voorstelbody = document.createElement('div');
 				voorstelbody.setAttribute('class', 'modal-body');
+                voorstelbody.setAttribute('id', 'voorstelbody'+j.toString());
 				
                 // De inhoud staat opgesomd in een dl-opsomming
 				var voorstelopsomming = document.createElement('dl');
@@ -409,6 +440,7 @@ function loadMotiesPagina() {
     $('.notetoggle').collapse({ toggle: false });
     $('.notetoggleinv').collapse({ toggle: false });
     setAllPens(j);
+    setSwipeHandlers(j);
 }
 
 function transformExtent(coordinates) {
@@ -525,7 +557,6 @@ function loadLocatiesPagina() {
     if (locaties.length == 1) {
         map.getView().setZoom(18);
     }
-    console.debug(map.getView().getZoom());
     
     popup = new ol.Overlay(
         { element: document.getElementById('popup') }
@@ -766,11 +797,6 @@ function exportData() {
     'use strict';
     var storedInfo = stringifyLocalStorage();
     
-    console.debug(storedInfo['ciphertext']);
-    console.debug(storedInfo['iv']);
-    console.debug(storedInfo['salt']);
-    console.debug(storedInfo['passphrase']);
-    
     var ciphertext = storedInfo['ciphertext'];
     var iv = storedInfo['iv'];
     var salt = storedInfo['salt'];
@@ -869,11 +895,6 @@ function importData() {
     xhr.onload = function(e) {
         if (this.status === 200) {
             var data = JSON.parse(this.responseText);
-            
-            console.debug(data['ciphertext']);
-            console.debug(data['iv']);
-            console.debug(data['salt']);
-            console.debug(passphrase);
             
             restoreLocalStorage(data['ciphertext'], passphrase, data['iv'], data['salt']);
             
