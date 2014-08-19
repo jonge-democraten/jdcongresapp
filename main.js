@@ -251,11 +251,25 @@ function loadMotiesPagina() {
 	'use strict';
 
 	activateMenuItem('motiesmenuitem');
-	var voorstellen = JSON.parse(localStorage.getItem("voorstellen"));
-	if (voorstellen === null) {
+	var voorstellenUnsorted = JSON.parse(localStorage.getItem("voorstellen"));
+	if (voorstellenUnsorted === null) {
 		loadDb(loadMotiesPagina, function(){alert('Kan database niet laden. Probeer later opnieuw.');});
         return;
 	}
+    
+    var voorstellen = {}
+    
+    for (var key in voorstellenUnsorted) { // We lopen over de verschillende groepen voorstellen heen
+        if (voorstellenUnsorted.hasOwnProperty(key)) {
+            voorstellenUnsorted[key].forEach(function(voorstel) {
+                if (!(voorstel['groep'] in voorstellen)) {
+                    voorstellen[voorstel['groep']] = [];
+                }
+                voorstellen[voorstel['groep']].push(voorstel);
+            });
+        }
+    }
+    
     document.getElementById('main').innerHTML = '';
 	var i = 0; // Index voor groepen
 	var j = 0; // Index voor voorstellen
