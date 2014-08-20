@@ -70,17 +70,28 @@ function pad(number) {
     else return number.toString();
 }
 
+function compareActiviteiten(ActiviteitA, ActiviteitB) {
+    'use strict';
+    var begintijdA = new Date(ActiviteitA['tijd']);
+    var begintijdB = new Date(ActiviteitB['tijd']);
+	if (begintijdA < begintijdB)
+		return -1;
+	if (begintijdA > begintijdB)
+		return 1;
+	return 0;
+}
+
 function loadAgendaPagina() {
-	'use strict';
+    'use strict';
     activateMenuItem('agendamenuitem');
-	var agenda = JSON.parse(localStorage.getItem("agenda"));
-	if (agenda === null) {
-		loadDb(loadAgendaPagina, function(){alert('Kan database niet laden. Probeer later opnieuw.');});
+    var agenda = JSON.parse(localStorage.getItem("agenda"));
+    if (agenda === null) {
+        loadDb(loadAgendaPagina, function(){alert('Kan database niet laden. Probeer later opnieuw.');});
         return;
-	}
+    }
     document.getElementById('main').innerHTML = '';
-	agenda.forEach(function(day) {
-		var panel = document.createElement('div');
+    agenda.forEach(function(day) {
+        var panel = document.createElement('div');
         panel.setAttribute('class', 'panel panel-default');
         var header = document.createElement('div');
         header.setAttribute('class', 'panel-heading');
@@ -90,7 +101,9 @@ function loadAgendaPagina() {
 
         var group = document.createElement('ul');
         group.setAttribute('class', 'list-group');
-		day["items"].forEach(function(item) {
+
+        day["items"].sort(compareActiviteiten);
+        day["items"].forEach(function(item) {
             var now = new Date();
             var begintijd = new Date(item['tijd']);
             var eindtijd = new Date(item['eindtijd']);
@@ -102,12 +115,12 @@ function loadAgendaPagina() {
             }
             var li = document.createElement('li');
             li.setAttribute('class', 'list-group-item');
-			li.innerHTML = html;
-			group.appendChild(li);
-		});
-		panel.appendChild(group);
-		document.getElementById('main').appendChild(panel);
-	});
+            li.innerHTML = html;
+            group.appendChild(li);
+        });
+        panel.appendChild(group);
+        document.getElementById('main').appendChild(panel);
+    });
 }
 
 function compareVoorstellen(voorstelA, voorstelB) {
