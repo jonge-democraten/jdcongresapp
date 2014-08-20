@@ -1,4 +1,4 @@
-var activateExport = false;
+var activateExport = true;
 
 function activateMenuItem(item) {
     'use strict';
@@ -767,7 +767,7 @@ function loadInstellingenPagina() {
     
     var restoreBodyText = document.createElement('div');
     restoreBodyText.setAttribute('class', 'pull-left');
-    restoreBodyText.appendChild(document.createTextNode("Importeer geëxporteerde informatie vanaf de server."));
+    restoreBodyText.appendChild(document.createTextNode("Importeer geëxporteerde informatie vanaf de server. Alle voorkeuren en aantekeningen die nu op dit apparaat staan, gaan verloren."));
     restoreBody.appendChild(restoreBodyText);
 
     var restoreButton = document.createElement('button');
