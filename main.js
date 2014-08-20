@@ -737,7 +737,7 @@ function loadInstellingenPagina() {
     
     var storeBodyText = document.createElement('div');
     storeBodyText.setAttribute('class', 'pull-left');
-    storeBodyText.appendChild(document.createTextNode("Exporteer alle informatie uit de app, inclusief aantekeningen en voorkeuren, naar de server. Met de Importeer-functie kun je deze op een ander apparaat weer inladen. Alle informatie wordt versleuteld voor verzending en is dus niet voor de beheerders in te zien."));
+    storeBodyText.appendChild(document.createTextNode("Exporteer alle informatie uit de app, inclusief aantekeningen en voorkeuren, naar de server. Met de Importeer-functie kun je deze op een ander apparaat weer inladen. Alle informatie wordt versleuteld voor verzending en is dus niet voor de beheerders in te zien. Let op: dit is geen backup. Geëxporteerde informatie wordt van tijd tot tijd verwijderd."));
     storeBody.appendChild(storeBodyText);
 
     var storeButton = document.createElement('button');
