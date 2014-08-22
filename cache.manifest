@@ -1,6 +1,4 @@
 CACHE MANIFEST
-NETWORK:
-data.json
 CACHE:
 index.html
 main.js
@@ -18,3 +16,6 @@ bootstrap/js/bootstrap.min.js
 bootstrap/fonts/glyphicons-halflings-regular.woff
 data/icon.png
 data/JD-logo.png
+NETWORK:
+data.json
+*
