@@ -16,3 +16,23 @@ body {
     height: 100%;
 }
 
+.navbar-inverse {
+	background-color: #9dc432;
+}
+.navbar-inverse .navbar-toggle:hover, .navbar-inverse .navbar-toggle:focus {
+	background-color: #9dc432;
+}
+
+.navbar-inverse .navbar-brand {
+	color: #FFFFFF;
+
+}
+
+.navbar-inverse .navbar-toggle {
+	border-color: #FFFFFF;
+}
+
+.navbar-inverse .navbar-nav>.active>a, .navbar-inverse .navbar-nav>.active>a:hover, .navbar-inverse .navbar-nav>.active>a:focus {
+	background-color: #38683d
+}
+
